@@ -1,0 +1,10 @@
+ID fname " :" lanme  ":" phone ":" age ":"
+string  string 
+
+1  moh saja 0356 sdfsdf6s
+2  moh saja 8787 dfff
+3  sll saja 45 sdfsdf6s
+4  sll saja 8 fafadsf
+
+
+delete from student where id = 2 
