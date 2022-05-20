@@ -5,7 +5,7 @@
 
 # Main script for DBMS
 PS3="Select the operation number : "
-
+export DB_LITE_DIR="DATABASES"
 
 
 #   Functions
@@ -23,6 +23,30 @@ PS3="Select the operation number : "
 #         fi
 #  
 # }
+
+
+function dropMenu(){
+    PS3="Select the db number : " 
+
+    databases=($(ls $DB_LITE_DIR)) # create array of database names as options
+    databases+=("exit") # append exit option at the end of the menu options
+
+select db in "${databases[@]}"; do
+  if [[ $db == exit ]] 
+  then break 
+  fi
+    . drop_db.sh $db
+    if [[ $? == 0 ]]
+    then
+        echo "The $db is deleted"
+        break
+    fi
+done
+
+PS3="Select the operation number : "
+
+}
+
 
 
 declare -a mainMenuItems=("Create Database" "Connect Database" "Drop Database" "List Database")
@@ -48,15 +72,20 @@ do
        
         ;;
         
-        "${mainMenuItems[2]}" ) echo "${mainMenuItems[2]}"  
-        
+        "${mainMenuItems[2]}" )
+            dropMenu
         ;;
         
-        "${mainMenuItems[3]}" ) echo "${mainMenuItems[3]}"  
-        
+        "${mainMenuItems[3]}" ) 
+            . list_db.sh 
         ;;
        
         * ) echo -e "\a Select number from options !!"
         ;;
     esac
 done
+
+
+
+
+
