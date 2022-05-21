@@ -1,7 +1,18 @@
 #!/bin/bash
-sudo apt install tree -y
-for file in `ls ./scripts` 
-do 
+
+if [ -f /etc/redhat-release ]
+then
+  sudo yum install tree -y
+fi
+
+if [ -f /etc/lsb-release ]
+then
+  sudo apt install tree -y
+fi
+
+
+for file in `ls ./scripts`
+do
 chmod +x "$PWD/scripts/$file"
 done
 export PATH=$PATH:$PWD/scripts

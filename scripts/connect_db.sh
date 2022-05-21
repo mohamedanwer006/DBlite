@@ -18,14 +18,16 @@ dbName=$1
 function connectMenu(){
     PS3="Select the db number : " 
 
-    databases=($(ls $DB_LITE_DIR)) # create array of database names as options
+    databases=($(ls $dbDir)) # create array of database names as options
     databases+=("back") # append exit option at the end of the menu options
 
 select db in "${databases[@]}"; do
+# todo :if select number above the array length + 1 show error
+
   if [[ $db == "back" ]] 
   then break 
   fi
-  commandMenu $db
+  commandMenu "$db"
 done
 PS3="Select the operation number : "
 }
