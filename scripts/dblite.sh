@@ -35,8 +35,7 @@ select db in "${databases[@]}"; do
   if [[ $db == exit ]] 
   then break 
   fi
-    . drop_db.sh $db
-    if [[ $? == 0 ]]
+    if . drop_db.sh "$db" ;
     then
         echo "The $db is deleted"
         break
@@ -58,13 +57,14 @@ do
     case $command in
         "${mainMenuItems[0]}" ) 
             # createDb
-            read  -p "Enter db name : " name
-            . create_db.sh  $name  
+            read  -rp "Enter db name : " dbName
+            # shellcheck source=create_db.sh
+            . create_db.sh "$dbName" 
             if [[ $? == 1 ]]
             then   
                 echo database already exists
             else
-                echo $dbName has add
+                echo "$dbName has add"
             fi
         ;;
 

@@ -37,7 +37,7 @@ function createDb(){
 if [ -d "$dbDir" ]
 then
     
-    createDb $dbName
+    createDb "$dbName"
     if [[ $? == 1 ]]
     then
     return 1
@@ -45,8 +45,8 @@ then
     return 0
     fi
 else 
-    mkdir $dbDir
-      createDb $dbName
+    mkdir "$dbDir"
+      createDb "$dbName"
     if [[ $? == 1 ]]
     then
     return 1
