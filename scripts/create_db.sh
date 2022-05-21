@@ -10,7 +10,7 @@
 #!  return exit code 0 database created 
 
 #   variables
-dbDir="DATABASES"
+dbDir=$DB_LITE_DIR
 dbName=$1
 
 

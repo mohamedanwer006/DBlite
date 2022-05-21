@@ -68,7 +68,8 @@ do
             fi
         ;;
 
-        "${mainMenuItems[1]}" ) echo "${mainMenuItems[1]}"  
+        "${mainMenuItems[1]}" ) 
+            . connect_db.sh  
        
         ;;
         
