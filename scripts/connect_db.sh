@@ -1,12 +1,11 @@
 #!/bin/bash
-#******************************************************************************
+#----------------------------------------------------------------------------
 #   Created at : 21/5/2022
-#******************************************************************************
-
-
 #   Create Database
 #   How to use
-#!  `. connect_db.sh `
+#*  `. connect_db.sh `
+#----------------------------------------------------------------------------
+
 
 
 #   variables
@@ -46,10 +45,12 @@ do
 if [[ $command == "back" ]] 
 then break 
 fi
-
     case $command in
     # todo : Create table
-        "${command[0]}" ) echo "${command[0]}" ;;
+        "${command[0]}" )
+          read -rp "Enter table name : " tableName
+          . create_table.sh "$dbName" "$tableName "
+          ;;
     # todo : List tables
         "${command[1]}" ) echo "${command[1]}" ;;
     # todo : Drop table
