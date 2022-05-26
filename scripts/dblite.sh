@@ -58,13 +58,17 @@ do
         "${mainMenuItems[0]}" ) 
             # createDb
             read  -rp "Enter db name : " dbName
-            # shellcheck source=create_db.sh
-            . create_db.sh "$dbName" 
-            if [[ $? == 1 ]]
-            then   
-                echo database already exists
+            if . isvalidname.sh "$dbName"
+            then
+                . create_db.sh  "$dbName"
+                if [[ $? == 1 ]]
+                then   
+                    echo "database already exists"
+                else
+                    echo "$dbName has add"
+                fi
             else
-                echo "$dbName has add"
+                echo "Invalid name of database start with letter and contain only letters ,numbers and _"
             fi
         ;;
 
