@@ -28,7 +28,7 @@ entitiesType=() # array to store the entities type
 
 typeset -i counter=1
 
-PS3="Select the type number : "
+PS3="Select the command number : "
 
 while [[ $finish == 0 ]]
 do 
