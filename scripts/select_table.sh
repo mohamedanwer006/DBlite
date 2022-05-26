@@ -2,7 +2,9 @@
 
 
 PS3="Enter option number: "
+dbDir="DATABASES"
 
+dbName=$1
 
 function index_of(){
 	my_array=$2[@]
@@ -20,7 +22,7 @@ function index_of(){
 
 function selectMainMenu(){
 	PS3="Enter the number of the table you want to select from: "
-	tables=($(ls $1)) #create array of table names as options
+	tables=($(ls "$dbDir/$dbName/")) #create array of table names as options
 	tables+=("Back") #Add option to cancel update operation
 
 	select t in "${tables[@]}";
@@ -47,7 +49,7 @@ function selectTableMenu(){
 		
 		if [[ $so == "Choose column" ]]
 		then
-			IFS="," read -r -a columns < <(head -n 1 $1/$t)
+			IFS="," read -r -a columns < <(head -n 1 "$dbDir/$dbName/$t")
 			columns+=("Back")
 		select col in "${columns[@]}";
 		do
@@ -58,12 +60,12 @@ function selectTableMenu(){
 			index_of $col columns #get column index
 			col_no=$? #column index
 			
-			selectColumnMenu $1 $t $col $col_no
+			selectColumnMenu "$dbDir/$dbName" $t $col $col_no
 		done
 		fi
 
 		if [[ $so == "* or All" ]]; then
-			cat $1/$t
+			cat "$dbDir/$dbName/$t"
 		fi
 	done
 	PS3="Enter option number: "
@@ -79,7 +81,7 @@ function selectColumnMenu(){
 		case $sco in
 			"${sColOptions[0]}") selectColumn $1 $t $col $col_no ;;
 			"${sColOptions[1]}") 
-				IFS="," read -r -a columns < <(head -n 1 $1/$t)
+				IFS="," read -r -a columns < <(head -n 1 "$dbDir/$dbName/$t")
 				columns+=("Cancel")
 				select cond in "${columns[@]}";
 				do
