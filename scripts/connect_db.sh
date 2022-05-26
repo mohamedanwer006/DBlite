@@ -46,25 +46,26 @@ if [[ $command == "back" ]]
 then break 
 fi
     case $command in
-    # todo : Create table
-        "${command[0]}" )
+        "${commands[0]}" )
           read -rp "Enter table name : " tableName
-          . create_table.sh "$dbName" "$tableName "
+          . create_table.sh "$dbName" "$tableName"
           ;;
     # todo : List tables
-        "${command[1]}" ) echo "${command[1]}" ;;
+        "${commands[1]}" ) 
+            . list_tables.sh "$dbName"
+         ;;
     # todo : Drop table
-        "${command[2]}" ) echo "${command[2]}" ;;
+        "${commands[2]}" ) echo "${command[2]}" ;;
     # todo : Insert into table
-        "${command[3]}" ) echo "${command[3]}" ;;
+        "${commands[3]}" ) echo "${command[3]}" ;;
     # todo : Select from table
-        "${command[4]}" ) echo "${command[4]}" ;;
+        "${commands[4]}" ) echo "${command[4]}" ;;
     # todo : Delete from table
-        "${command[5]}" ) echo "${command[5]}" ;;
+        "${commands[5]}" ) echo "${command[5]}" ;;
     # todo : Update into table
-        "${command[6]}" ) echo "${command[6]}" ;;
+        "${commands[6]}" ) echo "${command[6]}" ;;
         #   back command
-        "${command[7]}" ) ;;
+        "${commands[7]}" ) ;;
         * ) echo -e "\a Select number from options !!" 
         ;;
     esac

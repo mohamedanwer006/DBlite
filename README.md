@@ -4,7 +4,7 @@ DBLite is database management system implemented in bash.
 
 ### Run setup.sh script for initial setup
 ```shell
-$./setup.sh
+$. setup.sh
 ```
 
 ### start using
