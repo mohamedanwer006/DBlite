@@ -28,7 +28,7 @@ entitiesType=() # array to store the entities type
 
 typeset -i counter=1
 
-PS3="Select the type number : "
+PS3="Select the command number : "
 
 while [[ $finish == 0 ]]
 do 
@@ -37,10 +37,24 @@ select n in "Add entity" "Finish"
 do
 case $n in
     "Add entity" )
-        read -rp "Enter entity no $counter  : " entityName
-        # Todo check entity name is unique not empty 
-        # check entity name is not entered twice
-        entities+=("$entityName")
+        while true
+        do
+            read -rp "Enter entity no $counter  : " entityName
+            # check if the entity name is valid 
+            if . isvalidname.sh "$entityName"
+            then
+                # check entity name is not entered twice
+                if . isinlist.sh "$entityName" "${entities[@]}"
+                then
+                    echo "Entity name already exists"
+                else
+                    entities+=("$entityName")
+                    break
+                fi
+            else
+                echo "Invalid name of entity start with letter and contain only letters ,numbers and _"
+            fi
+        done
         break
         ;;
     "Finish" )
