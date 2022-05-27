@@ -114,8 +114,8 @@ function updateColumn(){
 		echo "${joined%\t}" >> $1/buffer
 		n=$n+1
 	done < <(cat $1/$t)
-	# Todo : redirect data from buffer to <table name> cat buffer > <table name>
-	# mv $1/buffer $1/$t
+	mv $1/buffer $1/$t
+	rm $1/buffer
 	echo "Col  updated!"	
 }
 
@@ -126,8 +126,8 @@ function updateWhere(){
 	typeset -i col_no=$col_no+1
 	echo "${col_no} and cond ${cond_no}"
 	echo "FILTERR ${filter}"
-	awk -F"," -v column="$col_no" -v condition="$cond_no" -v new_value="$new_val" -v fltr="$filter" '{ if ( $condition=="$fltr" ) { $column=$new_value ; print $0 } else { print $0 } }' $1/$t > $1/buffer
-	cat $1/buffer
+	awk -F"," -v column="$col_no" -v condition="$cond_no" -v new_value="$new_val" -v fltr="$filter" '{ if ( $condition=="$fltr" ) { $column=$new_value ; print $0 } else { print $0 } }' $1/$t > $1/$t.tmp
+	mv $1/$t.tmp $1/$t
 	echo "Update succesful!"
 }
 
