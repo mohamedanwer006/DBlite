@@ -12,7 +12,38 @@
 dbDir=$DB_LITE_DIR
 dbName=$1
 
+function dropMenu(){
+    PS3="Select the table number : " 
 
+    tables=($(ls "$DB_LITE_DIR/$dbName/")) # create array of tables names as options
+    tables+=("exit") # append exit option at the end of the menu options
+
+select tbl in "${tables[@]}"
+do
+    
+    if [[ $REPLY -gt ${#tables[@]} ]]
+    then
+
+        echo "Error: The number $REPLY  is not correct"
+    fi
+
+    if [[ $tbl == exit ]] 
+    then break 
+    fi
+    
+    if [[ $REPLY -lt ${#tables[@]} ]]
+    then
+        if . drop_table.sh "$dbName" "$tbl"
+        then
+            echo "The $tbl is dropped from $dbName"
+            break
+        fi
+    fi
+done
+
+PS3="Select the operation number : "
+
+}
 
 function connectMenu(){
     PS3="Select the db number : " 
@@ -20,13 +51,25 @@ function connectMenu(){
     databases=($(ls $dbDir)) # create array of database names as options
     databases+=("back") # append exit option at the end of the menu options
 
-select db in "${databases[@]}"; do
+select db in "${databases[@]}"
+do
 # todo :if select number above the array length + 1 show error
+# check if the selected number is above the array length
+   
+    if [[ $REPLY -gt ${#databases[@]} ]]
+    then
+        echo "Error: The number is not correct"
+    fi
+    
+    if [[ $db == "back" ]] 
+    then break 
+    fi
 
-  if [[ $db == "back" ]] 
-  then break 
-  fi
-  commandMenu "$db"
+    if [[ $REPLY -lt ${#databases[@]} ]]
+    then
+        commandMenu "$db"
+    fi
+
 done
 PS3="Select the operation number : "
 }
@@ -46,25 +89,34 @@ if [[ $command == "back" ]]
 then break 
 fi
     case $command in
-    # todo : Create table
-        "${command[0]}" )
+        "${commands[0]}" )
           read -rp "Enter table name : " tableName
-          . create_table.sh "$dbName" "$tableName "
+          . create_table.sh "$dbName" "$tableName"
           ;;
-    # todo : List tables
-        "${command[1]}" ) echo "${command[1]}" ;;
+
+        "${commands[1]}" ) 
+            . list_tables.sh "$dbName"
+         ;;
     # todo : Drop table
-        "${command[2]}" ) echo "${command[2]}" ;;
+        "${commands[2]}" ) 
+            dropMenu
+         ;;
     # todo : Insert into table
-        "${command[3]}" ) echo "${command[3]}" ;;
-    # todo : Select from table
-        "${command[4]}" ) echo "${command[4]}" ;;
-    # todo : Delete from table
-        "${command[5]}" ) echo "${command[5]}" ;;
-    # todo : Update into table
-        "${command[6]}" ) echo "${command[6]}" ;;
+        "${commands[3]}" ) echo "${command[3]}" ;;
+   
+        "${commands[4]}" ) 
+         . select_table.sh "$dbName"
+        ;;
+    
+        "${commands[5]}" )
+         . delete_table.sh "$dbDir/$dbName"
+         ;;
+   
+        "${commands[6]}" ) 
+         . update_table.sh "$dbDir/$dbName" 
+        ;;
         #   back command
-        "${command[7]}" ) ;;
+        "${commands[7]}" ) ;;
         * ) echo -e "\a Select number from options !!" 
         ;;
     esac
@@ -74,5 +126,5 @@ PS3="Select the operation number : "
 }
 
 
-#   menu 
+#   Start connect to database menu 
 connectMenu 

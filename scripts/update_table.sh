@@ -12,7 +12,7 @@ function index_of(){
 	for i in "${!arr[@]}"; do
 		if [[ "${arr[$i]}" = "${value}" ]]; 
 		then
-			return $i
+			return "$i"
 		fi
 	done
 }
@@ -93,7 +93,7 @@ function updateColumnMenu(){
 					updateWhere $1 $t $col $col_no $new_val $cond $cond_no $filter
 				done ;;
 			"${uColOptions[2]}") break ;;
-			*)echo "Enter one of the available option numbers:" ;;
+			*) echo "Enter one of the available option numbers:" ;;
 		esac
 	done
 } 
@@ -114,6 +114,8 @@ function updateColumn(){
 		echo "${joined%\t}" >> $1/buffer
 		n=$n+1
 	done < <(cat $1/$t)
+	# Todo : redirect data from buffer to <table name> cat buffer > <table name>
+	# mv $1/buffer $1/$t
 	echo "Col  updated!"	
 }
 

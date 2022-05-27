@@ -28,7 +28,7 @@ export DB_LITE_DIR="DATABASES"
 function dropMenu(){
     PS3="Select the db number : " 
 
-    databases=($(ls $DB_LITE_DIR)) # create array of database names as options
+    databases=($(ls $DB_LITE_DIR/)) # create array of database names as options
     databases+=("exit") # append exit option at the end of the menu options
 
 select db in "${databases[@]}"; do
@@ -58,13 +58,17 @@ do
         "${mainMenuItems[0]}" ) 
             # createDb
             read  -rp "Enter db name : " dbName
-            # shellcheck source=create_db.sh
-            . create_db.sh "$dbName" 
-            if [[ $? == 1 ]]
-            then   
-                echo database already exists
+            if . isvalidname.sh "$dbName"
+            then
+                . create_db.sh  "$dbName"
+                if [[ $? == 1 ]]
+                then   
+                    echo "database already exists"
+                else
+                    echo "$dbName has add"
+                fi
             else
-                echo "$dbName has add"
+                echo "Invalid name of database start with letter and contain only letters ,numbers and _"
             fi
         ;;
 

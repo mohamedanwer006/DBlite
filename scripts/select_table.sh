@@ -2,7 +2,9 @@
 
 
 PS3="Enter option number: "
+dbDir="DATABASES"
 
+dbName=$1
 
 function index_of(){
 
@@ -22,7 +24,7 @@ function index_of(){
 function selectMainMenu(){
 
 	PS3="Enter the number of the table you want to select from: "
-	tables=($(ls $1)) #create array of table names as options
+	tables=($(ls "$dbDir/$dbName/")) #create array of table names as options
 	tables+=("Back") #Add option to cancel update operation
 
 	select t in "${tables[@]}";
@@ -107,14 +109,13 @@ function columnMenu(){
 		
 		if [[ $so == "Choose column(s)" ]]
 		then
-			IFS="," read -r -a columns < <(head -n 1 $1/$t)
+			IFS="," read -r -a columns < <(head -n 1 "$dbDir/$dbName/$t")
 			columns+=("Back")
 		select col in "${columns[@]}";
 		do
 			if [[ $col == "Back" ]]
 			then break
 			fi
-			
 			read -r -p "Enter the column number. If you wish to select more than 1 column, enter the column numbers seperated by commas only and no spaces:" selection #columns to appear after select executes
 			
 			#index_of $col columns #get column index
@@ -123,8 +124,8 @@ function columnMenu(){
 			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
 			echo "${cond_columns[@]}"
 			
-			read -r -p "Above are the table columns in order, for each column/field enter the value you wish to use for the where-equals clause (WHERE col=value). Make sure the values are comma seperated (do not add spaces before or after the comma). Do not add quotations to string entries. To exclude a column just enter an empty value 'val,,val2' <-- Col1 excluded from where clause. " criteria #critera for filteration of records
-			
+			read -r -p "Above are the table columns in order, for each column/field enter the value you\n wish to use for the where-equals clause (WHERE col=value). Make sure the values\n are comma seperated (do not add spaces before or after the comma).\n Do not add quotations to string entries. To exclude a column just enter an empty value 'val,,val2' <-- Col1 excluded from where clause. " criteria #critera for filteration of records
+      
 			grep $criteria $1/$t | cut -d"," -f$selection | cat
 		done
 		fi
@@ -136,7 +137,7 @@ function columnMenu(){
 	done
 	PS3="Enter option number: "
 }
- 
+
 
 function selectColumn(){
 	awk -F"," '{ if (NR == 2) { next } else { print $0 }}' $1/$t > $1/$t.tmp
