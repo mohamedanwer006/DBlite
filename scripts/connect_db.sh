@@ -102,7 +102,9 @@ fi
             dropMenu
          ;;
     # todo : Insert into table
-        "${commands[3]}" ) echo "${command[3]}" ;;
+        "${commands[3]}" ) 
+		. insert_table.sh "$dbDir/$dbName"
+		;;
    
         "${commands[4]}" ) 
          . select_table.sh "$dbName"
