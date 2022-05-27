@@ -95,13 +95,15 @@ fi
          ;;
     # todo : Insert into table
         "${commands[3]}" ) echo "${command[3]}" ;;
-    # todo : Select from table
+   
         "${commands[4]}" ) 
          . select_table.sh "$dbName"
         ;;
-    # todo : Delete from table
-        "${commands[5]}" ) echo "${command[5]}" ;;
-    # todo : Update into table
+    
+        "${commands[5]}" )
+         . delete_table.sh "$dbDir/$dbName"
+         ;;
+   
         "${commands[6]}" ) 
          . update_table.sh "$dbDir/$dbName" 
         ;;

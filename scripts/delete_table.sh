@@ -64,7 +64,8 @@ function deleteTableMenu(){
 
 		if [[ $uo == "TRUNCATE" ]];
 		then
-			head -n 2 $1/$t > $1/$t
+			head -n 2 $1/$t > $1/$t.tmp
+			mv $1/$t.tmp $1/$t
 		fi
 	done
 	PS3="Enter option number: "
