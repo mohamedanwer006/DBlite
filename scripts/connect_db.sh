@@ -101,6 +101,10 @@ fi
         "${commands[2]}" ) 
             dropMenu
          ;;
+<<<<<<< HEAD
+=======
+    # todo : Insert into table
+>>>>>>> dev
         "${commands[3]}" ) 
 		. insert_table.sh "$dbDir/$dbName"
 		;;
