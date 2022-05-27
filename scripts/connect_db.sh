@@ -21,19 +21,23 @@ function dropMenu(){
 select tbl in "${tables[@]}"
 do
     
-    if [[ $REPLY > ${#databases[@]} ]]
+    if [[ $REPLY -gt ${#tables[@]} ]]
     then
-        echo "Error: The number is not correct"
-        break
+
+        echo "Error: The number $REPLY  is not correct"
     fi
+
     if [[ $tbl == exit ]] 
     then break 
     fi
     
-    if . drop_table.sh "$dbName" "$tbl"
+    if [[ $REPLY -lt ${#tables[@]} ]]
     then
-        echo "The $tbl is dropped from $dbName"
-        break
+        if . drop_table.sh "$dbName" "$tbl"
+        then
+            echo "The $tbl is dropped from $dbName"
+            break
+        fi
     fi
 done
 
@@ -52,16 +56,20 @@ do
 # todo :if select number above the array length + 1 show error
 # check if the selected number is above the array length
    
-    # if [[ $REPLY > ${#databases[@]} ]]
-    # then
-    #     echo "Error: The number is not correct"
-    #     break
-    # fi
+    if [[ $REPLY -gt ${#databases[@]} ]]
+    then
+        echo "Error: The number is not correct"
+    fi
     
     if [[ $db == "back" ]] 
     then break 
     fi
-    commandMenu "$db"
+
+    if [[ $REPLY -lt ${#databases[@]} ]]
+    then
+        commandMenu "$db"
+    fi
+
 done
 PS3="Select the operation number : "
 }

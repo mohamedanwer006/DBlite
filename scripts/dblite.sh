@@ -28,7 +28,7 @@ export DB_LITE_DIR="DATABASES"
 function dropMenu(){
     PS3="Select the db number : " 
 
-    databases=($(ls $DB_LITE_DIR)) # create array of database names as options
+    databases=($(ls $DB_LITE_DIR/)) # create array of database names as options
     databases+=("exit") # append exit option at the end of the menu options
 
 select db in "${databases[@]}"; do

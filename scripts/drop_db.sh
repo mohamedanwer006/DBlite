@@ -13,6 +13,10 @@
 dbDir=$DB_LITE_DIR
 dbName=$1
 
+# rm -r "$dbDir/$dbName/"
 
+rm -r "${dbDir:?}/${dbName:?}"
 
-rm -r "$dbDir/$dbName/"
+# Using :? will cause the command to fail if the variable is null or unset. 
+# Similarly, you can use :- to set a default value if applicable
+# https://www.shellcheck.net/wiki/SC2115
