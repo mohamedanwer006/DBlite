@@ -90,7 +90,8 @@ done
 # Add metadata to table 
 # First line contains the columns names
 # Second line contains the types of the columns
-echo "${entities[@]}" >> "$PWD/$dbDir/$dbName/$tableName"
-echo "${entitiesType[@]}" >> "$PWD/$dbDir/$dbName/$tableName"
-
+IFS=","; echo "${entities[*]}" >> "$PWD/$dbDir/$dbName/$tableName"
+IFS=","; echo "${entitiesType[*]}" >> "$PWD/$dbDir/$dbName/$tableName"
+sed -i 's/String/1/g' "$PWD/$dbDir/$dbName/$tableName"
+sed -i 's/Integer/0/g' "$PWD/$dbDir/$dbName/$tableName"
 PS3="Select the command number : " 
