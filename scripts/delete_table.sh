@@ -52,7 +52,6 @@ function deleteTableMenu(){
 			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
 			columns+=("Back")
 			
-			echo "values -----> ${cond_columns[@]}"
 			select cond_column in "${cond_columns[@]}"
 			do	
 				typeset -i cond_column_index
@@ -75,12 +74,10 @@ function deleteTableMenu(){
 				done
 				
 				mv $1/$t.tmp $1/$t
-				echo "DELETE FROM $t WHERE $cond_column = $criteria ; Complete!"
 				return
 			done
 		fi
 
-<<<<<<< HEAD
 		if [[ $deleteOption == "No -> TRUNCATE" ]];
 		then
 			sed -i '3,$d' $1/$t
@@ -89,18 +86,6 @@ function deleteTableMenu(){
 		return
 	done
 	PS3="Enter option number: "
-=======
-
-function deleteWhere(){
-	# TODO delete
-	typeset -i cond_no=$cond_no+1
-	typeset -i col_no=$col_no+1
-	echo "${col_no} and cond ${cond_no}"
-	echo "FILTERR ${filter}"
-	awk -F"," -v column="$col_no" -v condition="$cond_no" -v fltr="$filter" '{ if ( $condition=="$fltr" ) { next } else { print $0 } }' $1/$t > $1/buffer
-	cat $1/buffer
-	echo "Update succesful!"
->>>>>>> c921f9f4a4f98ef3b0e106fde9d30ca0d57e2152
 }
 
 deleteMainMenu $1

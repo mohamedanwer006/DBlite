@@ -54,7 +54,7 @@ function whereMenu(){
 			"${choices[2]}") return ;;
 			*)echo "Enter one of the available option numbers!" ;;
 =======
-			"${choices[2]}") break ;;
+			"${choices[2]}") return ;;
 			*) echo "Enter one of the available option numbers!" ;;
 >>>>>>> c921f9f4a4f98ef3b0e106fde9d30ca0d57e2152
 		esac
@@ -73,7 +73,7 @@ function columnMenu(){
 		select so in "${selectOptions[@]}";
 		do
 			if [[ $so == "Cancel" ]]
-			then break
+			then return
 			fi
 
 			if [[ $so == "* (All)" ]]; then
@@ -217,64 +217,3 @@ function selectWhere(){
 }
 
 selectMainMenu $1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			
-			
-				#columns+=("Cancel")
-				#echo "Enter column number for the where clause: "
-				#select cond in "${columns[@]}";
-				#do
-				#	if [[ $cond == "Cancel" ]];
-				#	then
-				#		break
-				#	fi
-
-				#	index_of $cond columns #get index of condition column
-				#	cond_no=$? #condition column index
-
-				#	read -r -p "Enter where/filter value: " filter
-					#Cond is the criteria, cond_no is that col num, filter is the value to look for
-				#	selectWhere $1 $t $cond $cond_no $filter
-				#done
-			
-			#selectColumnMenu $1 $t $selection #$col $col_no
