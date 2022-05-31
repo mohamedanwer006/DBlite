@@ -2,9 +2,9 @@
 
 
 PS3="Enter option number: "
-dbDir=$1 #"DATABASES"
+dbDir="DATABASES"
 
-dbName=$2
+dbName=$1
 
 function index_of(){
 
@@ -29,13 +29,13 @@ function selectMainMenu(){
 	select t in "${tables[@]}";
 	do
 		if [[ $t == "Back" ]]
-		then break
+		then exit 0
 		fi
 		whereMenu $dbDir/$dbName $t
+		exit 0
 		#selectTableMenu $1 $t
 	done
 	PS3="Enter the operation number: "
-
 }
 
 
@@ -50,9 +50,15 @@ function whereMenu(){
 		case $choice in
 			"${choices[0]}") columnMenu $1 $t 1 ;; #selectColumn $1 $t $col $col_no 
 			"${choices[1]}") columnMenu $1 $t 0 ;;
+<<<<<<< HEAD
+			"${choices[2]}") return ;;
+			*)echo "Enter one of the available option numbers!" ;;
+=======
 			"${choices[2]}") break ;;
 			*) echo "Enter one of the available option numbers!" ;;
+>>>>>>> c921f9f4a4f98ef3b0e106fde9d30ca0d57e2152
 		esac
+		return
 	done
 } 
 
@@ -76,7 +82,7 @@ function columnMenu(){
 			
 			if [[ $so == "Choose column(s)" ]]
 			then
-				IFS="," read -r -a columns < <(head -n 1 $1/$t)
+				IFS="," read -r -a columns < <(head -n 1 "$dbDir/$dbName/$t")
 				columns+=("Back")
 			select col in "${columns[@]}";
 			do
@@ -87,8 +93,10 @@ function columnMenu(){
 				echo "Enter the column numbers to appear in select: "
 				
 				selectColumn $1 $t $REPLY # or $col instead of $REPLY
+				return
 			done
 			fi
+			return
 		done
 		PS3="Enter option number: "
 		
@@ -156,7 +164,7 @@ function columnMenu(){
 			then return
 			fi
 			
-			read -r -p "Enter the column numbers to appear after select executes.\n Seperate column numbers by commas and no spaces.\n Do not put a comma before the first column number\n or after the last column number. Example --> 2,5,6 : " selection #columns to appear after select executes
+			#read -r -p "Enter the column numbers to appear after select executes.\n Seperate column numbers by commas and no spaces.\n Do not put a comma before the first column number\n or after the last column number. Example --> 2,5,6 : " selection #columns to appear after select executes
 			
 			PS3="Next, select the where column: "
 			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)

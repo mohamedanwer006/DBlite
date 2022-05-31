@@ -3,6 +3,7 @@
 
 PS3="Enter option number: "
 
+dbName=$1
 
 function index_of(){
 	my_array=$2[@]
@@ -26,102 +27,69 @@ function deleteMainMenu(){
 	select t in "${tables[@]}";
 	do
 		if [[ $t == "Back" ]]
-		then break
+		then exit 0
 		fi
 		deleteTableMenu $1 $t
+		exit 0
 	done
 	PS3="Enter the operation number: "
-
 }
 
 
 function deleteTableMenu(){
-	declare -a deleteOptions=("Choose column" "TRUNCATE"  "Cancel")
+	echo "Will you be specifying where?"
+	deleteOptions=("Yes -> Choose column" "No -> TRUNCATE"  "Cancel")
 	PS3="Enter option number: "
 	echo "--------------------------$t is open----------------------------"
-	select uo in "${deleteOptions[@]}";
+	select deleteOption in "${deleteOptions[@]}";
 	do
-		if [[ $uo == "Cancel" ]]
-		then break
+		if [[ $deleteOption == "Cancel" ]]
+		then return
 		fi
 		
-		if [[ $uo == "Choose column" ]]
+		if [[ $deleteOption == "Yes -> Choose column" ]]
 		then
-			IFS="," read -r -a columns < <(head -n 1 $1/$t)
+			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
 			columns+=("Back")
-		select col in "${columns[@]}";
-		do
-			if [[ $col == "Back" ]]
-			then break
-			fi
-
-			index_of $col columns #get column index
-			col_no=$? #column index
 			
-			deleteColumnMenu $1 $t $col $col_no 
-		done
-		fi
+			echo "values -----> ${cond_columns[@]}"
+			select cond_column in "${cond_columns[@]}"
+			do	
+				typeset -i cond_column_index
+				typeset -i cond_column_number
 
-		if [[ $uo == "TRUNCATE" ]];
-		then
-			head -n 2 $1/$t > $1/$t.tmp
-			mv $1/$t.tmp $1/$t
-		fi
-	done
-	PS3="Enter option number: "
-}
-
-
-function deleteColumnMenu(){
-
-	dColOptions=("Whole column" "Specify where" "Exit")
-	PS3="Enter option number: "
-	select dco in "${dColOptions[@]}";
-	do
-		case $dco in
-			"${dColOptions[0]}") deleteColumn $1 $t $col $col_no ;;
-			"${dColOptions[1]}") 
-				IFS="," read -r -a columns < <(head -n 1 $1/$t)
-				columns+=("Cancel")
-				select cond in "${columns[@]}";
+				index_of $cond_column cond_columns #get column index
+				cond_column_index=$? 
+				read -r -p "Enter search criteria/value for that column: " criteria
+				
+				# Now use table($1/$t), condition_column and its index to filter records to delete
+				cond_column_number=$cond_column_index+1		
+				record_nums=( $(tail -n +3 $1/$t | cut -d, -f$cond_column_number | grep -n -v $criteria | cut -f1 -d:) )
+				
+				touch $1/$t.tmp
+				sed -n "1,2p" $1/$t > $1/$t.tmp
+				
+				for record_num in "${record_nums[@]}"; 
 				do
-					if [[ $cond == "Cancel" ]];
-					then
-						break
-					fi
-
-					index_of $cond columns #get index of condition column
-					cond_no=$? #condition column index
-
-					read -p "Enter the value you would like to filter records by: " filter
-					#Cond is the criteria, cond_no is that col num, filter is the value to look for
-					deleteWhere $1 $t $col $col_no $new_val $cond $cond_no $filter
-				done ;;
-			"${dColOptions[2]}") break ;;
-			*)echo "Enter one of the available option numbers:" ;;
-		esac
-	done
-} 
-
-
-function deleteColumn(){
-
-	typeset -i n
-	n=0	
-	while read record
-	do
-		IFS="," read -r -a columns <<< $record
-		if [[ n -gt 1 ]]; 
-		then
-			columns[$col_no]=""
+					tail -n +3 $1/$t | sed -n "${record_num}p" >> $1/$t.tmp
+				done
+				
+				mv $1/$t.tmp $1/$t
+				echo "DELETE FROM $t WHERE $cond_column = $criteria ; Complete!"
+				return
+			done
 		fi
-		printf -v joined '%s\t' "${columns[@]}"
-		echo "${joined%\t}" >> $1/buffer
-		n=$n+1
-	done < <(cat $1/$t)
-	echo "Col  deleted!"	
-}
 
+<<<<<<< HEAD
+		if [[ $deleteOption == "No -> TRUNCATE" ]];
+		then
+			sed -i '3,$d' $1/$t
+		fi
+		
+		return
+	done
+	PS3="Enter option number: "
+=======
 
 function deleteWhere(){
 	# TODO delete
@@ -132,6 +100,7 @@ function deleteWhere(){
 	awk -F"," -v column="$col_no" -v condition="$cond_no" -v fltr="$filter" '{ if ( $condition=="$fltr" ) { next } else { print $0 } }' $1/$t > $1/buffer
 	cat $1/buffer
 	echo "Update succesful!"
+>>>>>>> c921f9f4a4f98ef3b0e106fde9d30ca0d57e2152
 }
 
 deleteMainMenu $1
