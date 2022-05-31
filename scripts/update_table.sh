@@ -100,7 +100,7 @@ function updateColumnMenu(){
 
 
 function updateColumn(){
-
+# TODO : ERR no update
 	typeset -i n
 	n=0	
 	while read record
@@ -129,6 +129,7 @@ function updateWhere(){
 	awk -F"," -v column="$col_no" -v condition="$cond_no" -v new_value="$new_val" -v fltr="$filter" '{ if ( $condition=="$fltr" ) { $column=$new_value ; print $0 } else { print $0 } }' $1/$t > $1/$t.tmp
 	mv $1/$t.tmp $1/$t
 	echo "Update succesful!"
+	# todo : Add ',' between each column 
 }
 
 updateMainMenu $1

@@ -15,6 +15,7 @@ for i in `ls $dbDir/$dbName`
 do
     echo "$i"
     head -n 2 "$dbDir/$dbName/$i"
+    # TODO fix ERR
     echo " "
 done
 

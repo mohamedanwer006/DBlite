@@ -51,7 +51,7 @@ function whereMenu(){
 			"${choices[0]}") columnMenu $1 $t 1 ;; #selectColumn $1 $t $col $col_no 
 			"${choices[1]}") columnMenu $1 $t 0 ;;
 			"${choices[2]}") break ;;
-			*)echo "Enter one of the available option numbers!" ;;
+			*) echo "Enter one of the available option numbers!" ;;
 		esac
 	done
 } 
@@ -70,9 +70,8 @@ function columnMenu(){
 			then break
 			fi
 
-			if [[ $so == "* or All" ]]; then
-				awk 'NR!=2' $1/$t
-				echo "Selected All Successfully!"
+			if [[ $so == "* (All)" ]]; then
+				awk 'NR!=2' "$1/$t"
 			fi
 			
 			if [[ $so == "Choose column(s)" ]]
@@ -108,7 +107,7 @@ function columnMenu(){
 		
 		if [[ $so == "Choose column(s)" ]]
 		then
-			IFS="," read -r -a columns < <(head -n 1 $1/$t)
+			IFS="," read -r -a columns < <(head -n 1 "$1/$t")
 			columns+=("Back")
 		select col in "${columns[@]}";
 		do
@@ -141,15 +140,15 @@ function columnMenu(){
 					tail -n +3 $1/$t | cut -d, -f$selection | sed -n "${record_num}p" >> $1/$t.tmp # Remember to cut with $selection
 				done
 				
-				cat $1/$t.tmp
-				rm $1/$t.tmp
+				cat "$1/$t.tmp"
+				rm "$1/$t.tmp"
 				return
 			done
 		done
 		fi
 
-		if [[ $so == "* or All" ]]; then
-						IFS="," read -r -a columns < <(head -n 1 $1/$t)
+		if [[ $so == "* (All)" ]]; then
+			IFS="," read -r -a columns < <(head -n 1 "$1/$t")
 			columns+=("Back")
 		select col in "${columns[@]}";
 		do

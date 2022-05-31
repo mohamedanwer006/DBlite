@@ -124,7 +124,7 @@ function deleteColumn(){
 
 
 function deleteWhere(){
-	
+	# TODO delete
 	typeset -i cond_no=$cond_no+1
 	typeset -i col_no=$col_no+1
 	echo "${col_no} and cond ${cond_no}"

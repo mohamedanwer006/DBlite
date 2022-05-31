@@ -14,10 +14,10 @@ dbName=$1
 
 function dropMenu(){
     PS3="Select the table number : " 
-
+# mapfile -t tables < <(ls "$DB_LITE_DIR/$dbName/")
     tables=($(ls "$DB_LITE_DIR/$dbName/")) # create array of tables names as options
     tables+=("exit") # append exit option at the end of the menu options
-
+# TODO handel number out of indexes
 select tbl in "${tables[@]}"
 do
     
@@ -106,7 +106,7 @@ fi
 		;;
    
         "${commands[4]}" ) 
-         . select_table.sh "$dbName"
+         . select_table.sh "$dbDir" "$dbName"
         ;;
     
         "${commands[5]}" )

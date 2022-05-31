@@ -19,7 +19,7 @@ function createTable(){
 # start by creating table file
 
 createTable "$tableName"
-
+# TODO : check table name
 # Add entity to table
 finish=0 # variable to check if the user wants to add more entities --> 0 = yes , 1 = no
 
