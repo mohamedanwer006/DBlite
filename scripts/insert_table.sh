@@ -1,70 +1,78 @@
 #!/bin/bash
 
-PS3="Enter the number of the table you want to select from: "
-tables=($(ls $1)) #create array of table names as options
+# firstArg="$PWD/DATABASES/mo/"
+# set -- "$firstArg"
+
+PS3="Enter the number of the table : "
+mapfile -t tables < <(ls "$1") # create array of table names as options
+# tables=($(ls "$1")) #create array of table names as options
+
 tables+=("Back") #Add option to cancel update operation
-values=()
+
 select t in "${tables[@]}";
 do
+	# check if user selected Back option
 	if [[ $t == "Back" ]]
 	then break
 	fi
 
-	tablePath="$1/$t"
+    # check if user selected a valid option
+	if [[ $REPLY =~ [^0-9] || $REPLY -gt ${#tables[@]} || $REPLY -lt 0 ]]
+    then
+        echo "Enter number from 0 to ${#tables[@]}"
+        continue
+    fi
 
-IFS="," # set the delimiter to ","
-# read first two lin from table file and add to array
-	columns=($(head -n 1 $tablePath))
+    
+    tablePath="$1/$t"
 
-awk -F"," 'NR==2' $tablePath > $1/data_types
+	IFS="," # set the delimiter to ","
+	# read first two lin from table file and add to array
+	columns=($(head -n 1 "$tablePath"))
 
-#  read the second line from table file and add to array
-	dTypes=($(head -n 2 $1/data_types | tail -n 1))
+	#  read the second line from table file and add to array
+	dataTypes=($(head -n 2 "$tablePath" | tail -n 1))
 
-for i in "${!columns[@]}"
-do
-	while true #Validates user input for each column and uniqueness for PK (Col 1)
+	for i in "${!columns[@]}"
 	do
-		read -p "Enter value for ${columns[$i]} column: " value
+		while true
+		do
+			read -rp "Enter value for ${columns[$i]} column: " value
 
-	# todo checks
-		# if [[ i -eq 0 ]]
-		# then
-		# 	. is_unique.sh "$value" "$i" "$tablePath"
-		# 	is_unique_flag=$?
-		# 	if [[ $is_unique_flag -eq 1 ]]
-		# 	then
-		# 		continue
-		# 	fi
-		# fi
+            # check for fist column (PK) uniqueness
+            if [[ $i -eq 0 ]]
+            then
+                #  get the first colum values from table file start from line 3 to end
+                colValues=($(tail -n +3 "$tablePath" | cut -d "," -f 1))
+                # check if the entered value is already exist in the column
+                if [[ "${colValues[*]}" =~ "$value" ]]
+                then
+                    echo "The value is already exist in the table"
+                    continue
+                fi
+            
+            fi
+            # check if the entered value matches the integer data type form the dataTypes array
+            if [[ ${dataTypes[$i]} -eq 0 && ! $value =~ ^[0-9]+$ ]]
+            then
+                echo "Enter a valid integer value"
+                continue
+            fi
+
+            # check if the entered value matches the string data type form the dataTypes array
+            if [[ ${dataTypes[$i]} -eq 1 && ! $value =~ ^[a-zA-Z]+$ ]]
+            then
+                echo "Enter a valid string value"
+                continue
+            fi
+
+			break
+		done
+		# add value to array
+		values+=("$value")
 		
-		# if [[ "${dTypes[$i]}" -eq 0 || "${dTypes[$i]}" == "0" ]]
-		# then
-		# 	. isnumber.sh "$value"
-		# 	is_num=$?
-		# 	if [[ $is_num -eq 1 || $is_num == "1" ]]
-		# 	then
-		# 		continue
-		# 	fi
-		# fi
-		
-		# if [[ "${dTypes[$i]}" -eq 1 || "${dTypes[$i]}" == "1" ]]
-		# then
-		# 	. isvalidname.sh "$value"
-		# 	is_str=$?
-		# 	if [[ $is_str -eq 1 || $is_str == "1" ]]
-		# 	then
-		# 		continue
-		# 	fi
-		# fi
-		
-		break
 	done
-	# add value to array
-	values+=("$value")
-	
-done
 
-IFS=",";echo "${values[*]}">>$tablePath
-
+IFS=","	;	echo "${values[*]}"	>>	"$tablePath"
+values=() # reset values array for next call as the script run as sourcing
 done
