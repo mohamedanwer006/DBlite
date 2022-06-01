@@ -90,8 +90,24 @@ then break
 fi
     case $command in
         "${commands[0]}" )
-          read -rp "Enter table name : " tableName
-          . create_table.sh "$dbName" "$tableName"
+
+            read  -rp "Enter table name : " tableName
+            if . isvalidname.sh "$tableName"
+            then
+                . create_table.sh "$dbName" "$tableName"
+                if [[ $? == 1 ]]
+                then   
+                    echo "$tableName already exists"
+                else
+                    echo "$tableName has add"
+                fi
+            else
+                echo "Invalid name of table start with letter and contain only letters, numbers and _"
+            fi
+
+        #####################################################33
+        #   read -rp "Enter table name : " tableName
+        #   . create_table.sh "$dbName" "$tableName"
           ;;
 
         "${commands[1]}" ) 
@@ -99,7 +115,7 @@ fi
          ;;
     # todo : Drop table
         "${commands[2]}" ) 
-            dropMenu
+            . drop_table.sh "$dbName"
          ;;
         "${commands[3]}" ) 
 		. insert_table.sh "$dbDir/$dbName"
