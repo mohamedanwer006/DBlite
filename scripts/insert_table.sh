@@ -39,7 +39,7 @@ do
 		do
 			read -rp "Enter value for ${columns[$i]} column: " value
 
-            # check for fist column (PK) uniqueness
+            # check for first column (PK) uniqueness
             if [[ $i -eq 0 ]]
             then
                 #  get the first colum values from table file start from line 3 to end

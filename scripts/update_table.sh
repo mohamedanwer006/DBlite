@@ -96,6 +96,7 @@ function updateMenu(){
 		PS3="Enter option number: "
 	fi
 	
+	# here if specifiying where 
 	declare -a updateOptions=("Choose column" "Cancel")
 		PS3="Enter option number: "
 		echo "--------------------------$t is open----------------------------"
@@ -132,15 +133,43 @@ function updateMenu(){
 						index_of $column columns #get index of column to be updated
 						column_index=$? #column index
 						read -p "Enter the new value you would like to set: " new_val
+						
+						# check for first column (PK) uniqueness
+						if [[ $column_index -eq 0 ]]
+						then
+							#  get the first colum values from table file start from line 3 to end
+							colValues=($(tail -n +3 "$tablePath" | cut -d "," -f 1))
+							# check if the entered value already exists in the column
+							if [[ "${colValues[*]}" =~ "$new_val" ]]
+							then
+								echo "The entered value already exists in the table."
+								return
+							fi
+						fi
+						
+						# check if the entered value matches the integer data type form the dataTypes array
+						if [[ ${dataTypes[$column_index]} -eq 0 && ! $new_val =~ ^[0-9]+$ ]]
+						then
+							echo "Not a valid integer value."
+							return
+						fi
+
+						# check if the entered value matches the string data type form the dataTypes array
+						if [[ ${dataTypes[$column_index]} -eq 1 && ! $new_val =~ ^[a-zA-Z]+$ ]]
+						then
+							echo "Not a valid string value."
+							return
+						fi
+						
 						typeset -i column_num=$column_index+1
 						
 						for record_num in "${record_nums[@]}"; 
 						do
 							typeset -i rec_num=$record_num+2
-							awk -F"," -v record_number=$rec_num -v column_number="$column_num" -v new_value="$new_val" 'BEGIN { OFS="," } { if ( NR==record_number ) { $column_number=new_value; print $0 } }' $1/$t > $1/$t.tmp
+							awk -F"," -v record_number=$rec_num -v column_number="$column_num" -v new_value="$new_val" 'BEGIN { OFS="," } { if ( NR==record_number ) { $column_number=new_value; print $0 } }' $1/$t #> $1/$t.tmp
 						done
 						
-						mv $1/$t.tmp $1/$t
+						#mv $1/$t.tmp $1/$t
 						return
 					done
 					return
