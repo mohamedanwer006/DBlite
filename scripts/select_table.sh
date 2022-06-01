@@ -50,13 +50,10 @@ function whereMenu(){
 		case $choice in
 			"${choices[0]}") columnMenu $1 $t 1 ;; #selectColumn $1 $t $col $col_no 
 			"${choices[1]}") columnMenu $1 $t 0 ;;
-<<<<<<< HEAD
 			"${choices[2]}") return ;;
 			*)echo "Enter one of the available option numbers!" ;;
-=======
 			"${choices[2]}") return ;;
 			*) echo "Enter one of the available option numbers!" ;;
->>>>>>> c921f9f4a4f98ef3b0e106fde9d30ca0d57e2152
 		esac
 		return
 	done
@@ -125,7 +122,7 @@ function columnMenu(){
 			
 			read -r -p "Enter the column numbers to appear after select executes.\n Seperate column numbers by commas and no spaces.\n Do not put a comma before the first column number\n or after the last column number. Example --> 2,5,6 : " selection #columns to appear after select executes
 			
-			PS3="Next, select the where column: "
+			PS3="Next, select the column for the where clause: "
 			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
 			select cond_column in "${cond_columns[@]}"
 			do	
@@ -166,7 +163,7 @@ function columnMenu(){
 			
 			#read -r -p "Enter the column numbers to appear after select executes.\n Seperate column numbers by commas and no spaces.\n Do not put a comma before the first column number\n or after the last column number. Example --> 2,5,6 : " selection #columns to appear after select executes
 			
-			PS3="Next, select the where column: "
+			PS3="Next, select the column for the where clause: "
 			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
 			select cond_column in "${cond_columns[@]}"
 			do	
