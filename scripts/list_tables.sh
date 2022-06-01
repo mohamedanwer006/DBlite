@@ -11,10 +11,10 @@ dbDir="DATABASES"
 
 dbName=$1
 
-for i in `ls $dbDir/$dbName`
+for i in `ls "$dbDir/$dbName"`
 do
     echo "$i"
-    head -n 2 "$dbDir/$dbName/$i"
+    head -n 2 "$dbDir/$dbName/$i" 2>/dev/null
     # TODO fix ERR
     echo " "
 done

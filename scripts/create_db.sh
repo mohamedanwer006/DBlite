@@ -30,9 +30,6 @@ function createDb(){
 } 
 
 
-#   TODO: validate the name of the database
-
-#   Check if databases directory already exists
 
 if [ -d "$dbDir" ]
 then
