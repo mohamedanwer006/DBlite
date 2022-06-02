@@ -29,10 +29,10 @@ function selectMainMenu(){
 	select t in "${tables[@]}";
 	do
 		if [[ $t == "Back" ]]
-		then exit 0
+		then return 0
 		fi
 		whereMenu $dbDir/$dbName $t
-		exit 0
+		return 0
 		#selectTableMenu $1 $t
 	done
 	PS3="Enter the operation number: "
