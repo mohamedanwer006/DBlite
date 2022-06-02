@@ -7,24 +7,6 @@
 PS3="Select the operation number : "
 export DB_LITE_DIR="DATABASES"
 
-
-#   Functions
-
-# function createDb(){
-#     local name
-#     read  -p "Enter db name : " name
-       
-#         . create_db.sh  $name  
-#         if [[ $? == 1 ]]
-#         then   
-#             echo database already exists
-#         else
-#             echo $dbName has add
-#         fi
-#  
-# }
-
-
 function dropMenu(){
     PS3="Select the db number : " 
 
@@ -51,7 +33,7 @@ PS3="Select the operation number : "
 declare -a mainMenuItems=("Create Database" "Connect Database" "Drop Database" "List Database")
 
 # Main menu
-
+. print_title.sh "WELCOME TO DBLITE DBMS"
 select command in "${mainMenuItems[@]}"
 do
     case $command in
