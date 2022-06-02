@@ -20,7 +20,7 @@ select tbl in "${tables[@]}"
 do 
     if [[ $REPLY =~ [^0-9] || $REPLY -gt ${#tables[@]} || $REPLY -lt 0 ]]
     then
-        echo "Enter a number between 0 and ${#tables[@]}"
+        echo -e "\aEnter a number between 0 and ${#tables[@]}"
         continue
     fi
 

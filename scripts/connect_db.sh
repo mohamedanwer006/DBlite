@@ -82,9 +82,11 @@ commands+=("back")
 PS3="Select the command number : "
 local dbName=$1
 
-echo "----------------------------$dbName is open----------------------------" 
+# echo "----------------------------$dbName is open----------------------------" 
+. print_title.sh "Connected To $dbName"
 select command in "${commands[@]}"
 do
+
 if [[ $command == "back" ]] 
 then break 
 fi

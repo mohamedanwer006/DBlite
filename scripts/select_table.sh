@@ -4,7 +4,7 @@
 PS3="Enter option number: "
 dbDir="DATABASES"
 
-dbName=$1
+dbName=$2
 
 function index_of(){
 
@@ -51,7 +51,7 @@ function whereMenu(){
 			"${choices[0]}") columnMenu $1 $t 1 ;; #selectColumn $1 $t $col $col_no 
 			"${choices[1]}") columnMenu $1 $t 0 ;;
 			"${choices[2]}") return ;;
-			*)echo "Enter one of the available option numbers!" ;;
+			*) echo "Enter one of the available option numbers!" ;;
 			"${choices[2]}") return ;;
 			*) echo "Enter one of the available option numbers!" ;;
 		esac

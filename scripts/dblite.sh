@@ -30,7 +30,7 @@ PS3="Select the operation number : "
 
 
 
-declare -a mainMenuItems=("Create Database" "Connect Database" "Drop Database" "List Database")
+declare -a mainMenuItems=("Create Database" "Connect Database" "Drop Database" "List Database" "Exit")
 
 # Main menu
 . print_title.sh "WELCOME TO DBLITE DBMS"
@@ -39,6 +39,7 @@ do
     case $command in
         "${mainMenuItems[0]}" ) 
             # createDb
+            . print_title.sh "Create A New Database "
             read  -rp "Enter db name : " dbName
             if . isvalidname.sh "$dbName"
             then
@@ -54,17 +55,24 @@ do
             fi
         ;;
 
-        "${mainMenuItems[1]}" ) 
+        "${mainMenuItems[1]}" )
+            . print_title.sh "Connect To Database" 
             . connect_db.sh  
        
         ;;
         
         "${mainMenuItems[2]}" )
+         . print_title.sh "Drop Database"
             dropMenu
         ;;
         
         "${mainMenuItems[3]}" ) 
+            . print_title.sh "List Databases"
             . list_db.sh 
+        ;;
+        
+        "${mainMenuItems[4]}" ) 
+           exit
         ;;
        
         * ) echo -e "\a Select number from options !!"

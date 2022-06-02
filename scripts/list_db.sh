@@ -13,17 +13,19 @@ dbDir=$DB_LITE_DIR
 # display data using tree command
 if [ -d $dbDir ]
 then 
-	tree "$dbDir"
+	# tree "$dbDir"
+
+for db in  `ls $dbDir`
+do
+    echo "┌─ $db"
+    for table in `ls $dbDir/$db `
+    do
+         echo -e "├────\t$table" 
+    done 
+done  
+
 else
 	echo "There are no databases to list."
 fi
 # display using for loop 
-
-# for db in  `ls $dbDir`
-# do
-#     echo "┌─ $db"
-#     for table in `ls $dbDir/$db `
-#     do
-#          echo -e "├────\t$table" 
-#     done 
-# done    
+  
