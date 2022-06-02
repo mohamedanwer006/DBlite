@@ -3,18 +3,12 @@
 #   return 0 if it is a valid name
 #   return 1 if it is not a valid name
 #   this script run as a  sourced script
-#   to use it as a function . isnumber.sh <name>
+#   to use it as a function . isvalidname.sh <name>
 
-pattern=" |'" # pattern to check if the argument does not contain any space or apostrophe
 
-if [[ "$1" =~ ^[a-zA-Z]+[\w]* ]]
+if [[  ! $1 =~ ^[a-zA-Z]+[a-zA-Z0-9_]*$  ]]
 then
-    if [[ "$1" =~ $pattern ]]
-    then
-        return 1
-    else
-        return 0
-    fi
-else
     return 1
+else
+    return 0
 fi
