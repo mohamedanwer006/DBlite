@@ -47,7 +47,7 @@ function whereMenu(){
 			"${choices[0]}") updateMenu $1 $t 1 ;; 
 			"${choices[1]}") updateMenu $1 $t 0 ;;
 			"${choices[2]}") return ;;
-			*)echo "Enter one of the available option numbers!" ;;
+			*) echo "Enter one of the available option numbers!" ;;
 			"${choices[2]}") return ;;
 			*) echo "Enter one of the available option numbers!" ;;
 		esac
@@ -85,9 +85,9 @@ function updateMenu(){
 					#updateColumnMenu $1 $t $col $col_no $new_val
 					typeset -i column_num=$column_index+1
 									
-					awk -F"," -v column_number="$column_num" -v new_value="$new_val" 'BEGIN { OFS="," } { if ( NF==column_number ) { $column_number=new_value; print $0 } else { print $0 } }' $1/$t > $1/$t.tmp
+					awk -F"," -v column_number="$column_num" -v new_value="$new_val" 'BEGIN { OFS="," } { if ( NF==column_number ) { $column_number=new_value; print $0 } else { print $0 } }' $1/$t >> $1/.$t.tmp
 					
-					mv $1/$t.tmp $1/$t
+					mv $1/.$t.tmp $1/$t
 					exit 0
 				done
 			fi
@@ -166,10 +166,10 @@ function updateMenu(){
 						for record_num in "${record_nums[@]}"; 
 						do
 							typeset -i rec_num=$record_num+2
-							awk -F"," -v record_number=$rec_num -v column_number="$column_num" -v new_value="$new_val" 'BEGIN { OFS="," } { if ( NR==record_number ) { $column_number=new_value; print $0 } }' $1/$t > $1/$t.tmp
+							awk -F"," -v record_number=$rec_num -v column_number="$column_num" -v new_value="$new_val" 'BEGIN { OFS="," } { if ( NR==record_number ) { $column_number=new_value; print $0 } }' $1/$t >> $1/.$t.tmp
 						done
 						
-						mv $1/$t.tmp $1/$t
+						mv $1/.$t.tmp $1/$t
 						return
 					done
 					return
