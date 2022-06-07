@@ -81,6 +81,13 @@ function updateMenu(){
 
 					index_of $column columns #get column index
 					column_index=$? #column index
+					
+					if [[ $column_index == 0 ]] 
+					then
+						echo "Cannot update entire PK field. Exiting..."
+						return
+					fi
+					
 					read -p "Enter the new value you would like to set: " new_val
 					
 					IFS="," read -r -a dataTypes < <(head -n 2 $1/$t | tail -n 1)
