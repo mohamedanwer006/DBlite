@@ -82,6 +82,25 @@ function updateMenu(){
 					index_of $column columns #get column index
 					column_index=$? #column index
 					read -p "Enter the new value you would like to set: " new_val
+					
+					IFS="," read -r -a dataTypes < <(head -n 2 $1/$t | tail -n 1)
+					
+					#echo "${dataTypes[@]} and $column_index"
+					
+					# check if the entered value matches the integer data type form the dataTypes array
+					if [[ ${dataTypes[$column_index]} -eq 0 && ! $new_val =~ ^[0-9]+$ ]]
+					then
+						echo "Enter a valid integer value"
+						return
+					fi
+
+					# check if the entered value matches the string data type form the dataTypes array
+					if [[ ${dataTypes[$column_index]} -eq 1 && ! $new_val =~ ^[a-zA-Z]+$ ]]
+					then
+						echo "Enter a valid string value"
+						return
+					fi
+					
 					#updateColumnMenu $1 $t $col $col_no $new_val
 					typeset -i column_num=$column_index+1
 									
@@ -133,6 +152,24 @@ function updateMenu(){
 						index_of $column columns #get index of column to be updated
 						column_index=$? #column index
 						read -p "Enter the new value you would like to set: " new_val
+						IFS="," read -r -a dataTypes < <(head -n 2 $1/$t | tail -n 1)
+						
+						#echo "${dataTypes[@]} and $column_index"
+						
+						# check if the entered value matches the integer data type form the dataTypes array
+						if [[ ${dataTypes[$column_index]} -eq 0 && ! $new_val =~ ^[0-9]+$ ]]
+						then
+							echo "Enter a valid integer value"
+							return
+						fi
+
+						# check if the entered value matches the string data type form the dataTypes array
+						if [[ ${dataTypes[$column_index]} -eq 1 && ! $new_val =~ ^[a-zA-Z]+$ ]]
+						then
+							echo "Enter a valid string value"
+							return
+						fi
+						
 						typeset -i column_num=$column_index+1
 						
 						for record_num in "${record_nums[@]}"; 
