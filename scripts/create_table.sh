@@ -7,6 +7,7 @@
 #*   <table_name> is the name of the table
 #* return exit code 1 table already exists
 #* return exit code 0 table created
+#* return exit code 3 table not saved
 #-------------------------------------------------
 
 dbDir="DATABASES"
@@ -33,7 +34,6 @@ createTable "$tableName"
 
 # Add entity to table
 finish=0 # variable to check if the user wants to add more entities --> 0 = yes , 1 = no
-
 entities=() # array to store the entities
 entitiesType=() # array to store the entities type
 
@@ -106,4 +106,13 @@ PS3="Select the command number : "
     sed -i 's/String/1/g' "$PWD/$dbDir/$dbName/$tableName" # replace String with 1
     sed -i 's/Integer/0/g' "$PWD/$dbDir/$dbName/$tableName" # replace Integer with 0
     PS3="Select the command number : "
+    # check if the user finish before he enter the entity 
+    if [[ ${#entities[@]}  == 0  ]]
+    then
+
+        rm  "$PWD/$dbDir/$dbName/$tableName"
+        
+        return 1
+    fi 
+    
     return 0 # return 0 if table created successfully

@@ -99,9 +99,9 @@ fi
                 . create_table.sh "$dbName" "$tableName"
                 if [[ $? == 1 ]]
                 then   
-                    echo "$tableName already exists"
+                    echo "$tableName already exists or you Finish with out add entity"
                 else
-                    echo "$tableName has add"
+                    echo "$tableName Added"
                 fi
             else
                 echo "Invalid name of table start with letter and contain only letters, numbers and _"

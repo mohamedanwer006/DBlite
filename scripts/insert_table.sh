@@ -19,7 +19,7 @@ do
     # check if user selected a valid option
 	if [[ $REPLY =~ [^0-9] || $REPLY -gt ${#tables[@]} || $REPLY -lt 0 ]]
     then
-        echo "Enter number from 0 to ${#tables[@]}"
+        echo "Enter number from 1 to $((${#tables[@]}))"
         continue
     fi
 
@@ -27,7 +27,7 @@ do
     tablePath="$1/$t"
 
 	IFS="," # set the delimiter to ","
-	# read first two lin from table file and add to array
+	# read first two line from table file and add to array
 	columns=($(head -n 1 "$tablePath"))
 
 	#  read the second line from table file and add to array
@@ -37,7 +37,7 @@ do
 	do
 		while true
 		do
-			read -rp "Enter value for ${columns[$i]} column: " value
+			read -rp "Enter value for ( ${columns[$i]} ) -> : " value
 
             # check for first column (PK) uniqueness
             if [[ $i -eq 0 ]]
@@ -75,4 +75,5 @@ do
 
 IFS=","	;	echo "${values[*]}"	>>	"$tablePath"
 values=() # reset values array for next call as the script run as sourcing
+PS3="Select the operation number : "
 done
