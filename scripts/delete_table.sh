@@ -27,10 +27,10 @@ function deleteMainMenu(){
 	select t in "${tables[@]}";
 	do
 		if [[ $t == "Back" ]]
-		then exit 0
+		then return
 		fi
 		deleteTableMenu $1 $t
-		exit 0
+		return
 	done
 	PS3="Enter the operation number: "
 }

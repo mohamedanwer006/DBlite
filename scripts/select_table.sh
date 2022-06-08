@@ -199,6 +199,7 @@ function columnMenu(){
 function selectColumn(){
 	awk -F"," 'NR!=2' $1/$t > $1/$t.tmp
 	cut -d"," -f$3 $1/$t.tmp | cat
+	rm $1/$t.tmp
 }
 
 

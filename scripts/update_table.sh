@@ -24,11 +24,11 @@ function updateMainMenu(){
 	select t in "${tables[@]}";
 	do
 		if [[ $t == "Back" ]]
-		then exit 0
+		then return
 		fi
 		whereMenu $1 $t
 		#updateTableMenu $1 $t
-		exit 0
+		return
 	done
 	PS3="Enter the operation number: "
 
@@ -115,10 +115,10 @@ function updateMenu(){
 					
 					mv $1/.f.csv $1/$t
 					echo "Update Column Done!"
-					exit 0
+					return
 				done
 			fi
-			exit 0
+			return
 		done
 		PS3="Enter option number: "
 	fi
