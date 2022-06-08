@@ -27,6 +27,7 @@ for (( i=0; i<${#title}; i++ )); do
         echo -n "╍" 
 done 
 echo -e "$Cyan$topLine2$NC"
+
 for (( i=0; i<${#topLine1}; i++ )); do
  if [[ $i -eq 0 ]]
     then
@@ -37,6 +38,7 @@ for (( i=0; i<${#topLine1}; i++ )); do
     fi
 done
 echo  -en "$Green$title$NC"
+
 for (( i=1; i<=${#topLine2}; i++ )); do
  if [[ $i -eq ${#topLine2} ]]
     then
@@ -45,7 +47,9 @@ for (( i=1; i<=${#topLine2}; i++ )); do
         echo -n " "
     fi
 done
+
 echo -en "$Cyan$bottomLine1$NC"
+
 for (( i=0; i<${#title}; i++ )); do
     echo -n "╍"
 done

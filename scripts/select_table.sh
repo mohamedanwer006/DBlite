@@ -32,6 +32,7 @@ function selectMainMenu(){
 		then return 0
 		fi
 		whereMenu $dbDir/$dbName $t
+		PS3="Enter option number: "
 		return 0
 		#selectTableMenu $1 $t
 	done
@@ -81,22 +82,21 @@ function columnMenu(){
 			then
 				IFS="," read -r -a columns < <(head -n 1 "$dbDir/$dbName/$t")
 				columns+=("Back")
+				PS3="Enter the column numbers to appear after select executes. Seperate column numbers by commas and no spaces. Do not put a comma before the first column number or after the last column number. Example --> 2,5,6 : "
 			select col in "${columns[@]}";
 			do
 				if [[ $col == "Back" ]]
 				then return
 				fi
 				
-				echo "Enter the column numbers to appear in select: "
-				
 				selectColumn $1 $t $REPLY # or $col instead of $REPLY
+				PS3="Enter option number: "
 				return
 			done
 			fi
 			return
 		done
 		PS3="Enter option number: "
-		
 		return
 	fi
 	
@@ -114,13 +114,14 @@ function columnMenu(){
 		then
 			IFS="," read -r -a columns < <(head -n 1 "$1/$t")
 			columns+=("Back")
+			PS3="Enter the column numbers to appear after select executes. Seperate column numbers by commas and no spaces. Do not put a comma before the first column number or after the last column number. Example --> 2,5,6 : "
 		select col in "${columns[@]}";
 		do
 			if [[ $col == "Back" ]]
 			then return
 			fi
 			
-			read -r -p "Enter the column numbers to appear after select executes.\n Seperate column numbers by commas and no spaces.\n Do not put a comma before the first column number\n or after the last column number. Example --> 2,5,6 : " selection #columns to appear after select executes
+			selection=$REPLY #columns to appear after select executes
 			
 			PS3="Next, select the column for the where clause: "
 			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
@@ -147,6 +148,7 @@ function columnMenu(){
 				
 				cat "$1/$t.tmp"
 				rm "$1/$t.tmp"
+				PS3="Enter option number: "
 				return
 			done
 		done
@@ -160,8 +162,6 @@ function columnMenu(){
 			if [[ $col == "Back" ]]
 			then return
 			fi
-			
-			#read -r -p "Enter the column numbers to appear after select executes.\n Seperate column numbers by commas and no spaces.\n Do not put a comma before the first column number\n or after the last column number. Example --> 2,5,6 : " selection #columns to appear after select executes
 			
 			PS3="Next, select the column for the where clause: "
 			IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
@@ -188,6 +188,7 @@ function columnMenu(){
 				
 				cat $1/$t.tmp
 				rm $1/$t.tmp
+				PS3="Enter option number: "
 				return
 			done
 		done
@@ -200,9 +201,10 @@ function selectColumn(){
 	awk -F"," 'NR!=2' $1/$t > $1/$t.tmp
 	cut -d"," -f$3 $1/$t.tmp | cat
 	rm $1/$t.tmp
+	PS3="Enter option number: "
 }
 
-
+#Dead
 function selectWhere(){
 	
 	typeset -i cond_no=$cond_no+1

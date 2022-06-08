@@ -99,7 +99,7 @@ fi
                 . create_table.sh "$dbName" "$tableName"
                 if [[ $? == 1 ]]
                 then   
-                    echo "$tableName already exists or you Finish with out add entity"
+                    echo "$tableName already exists or you finish with out add entity"
                 else
                     echo "$tableName Added"
                 fi

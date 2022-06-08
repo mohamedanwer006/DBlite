@@ -30,6 +30,7 @@ function deleteMainMenu(){
 		then return
 		fi
 		deleteTableMenu $1 $t
+		PS3="Enter option number: "
 		return
 	done
 	PS3="Enter the operation number: "

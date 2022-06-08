@@ -46,9 +46,9 @@ do
                 . create_db.sh  "$dbName"
                 if [[ $? == 1 ]]
                 then   
-                    echo "database already exists"
+                    echo "database already exists!"
                 else
-                    echo "$dbName has add"
+                    echo "$dbName has been created."
                 fi
             else
                 echo "Invalid name of database start with letter and contain only letters ,numbers and _"
