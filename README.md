@@ -14,4 +14,21 @@ $dblite.sh
 
 
 <img src="./assets/draw.svg" />
-TODO: Add description
+
+
+## Screenshot of dblite terminal UI
+
+<p >
+  <img src="./assets/main.png" width="400" />
+  <img src="./assets/open.png" width="400" /> 
+</p>
+
+<p >
+  <img src="./assets/list.png" width="400" />
+  <img src="./assets/insert.png" width="400" /> 
+</p>
+
+<p >
+  <img src="./assets/createtable.png" width="400" />
+  <img src="./assets/droptable.png" width="400" /> 
+</p>
