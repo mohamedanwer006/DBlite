@@ -11,12 +11,12 @@
 dbDir=$DB_LITE_DIR
 dbName="$1"
 
-PS3="Select the table number : " 
+# PS3="Select the table number : " 
 # mapfile -t tables < <(ls "$DB_LITE_DIR/$dbName/")
 tables=($(ls "$DB_LITE_DIR/$dbName/")) # create array of tables names as options
 
 declare -a args=(
-    --title "Welcome to dblite DBMS " --backtitle "ITI Bash Project" --notags --fb --menu "Select option from below 👇" 20 60 "${#tables[@]}"
+    --title "Drop table from $dbName " --notags --fb --menu "Select table to delete 👇" 20 60 "${#tables[@]}"
 )
 # create array of menu commands
 for item in "${tables[@]}"; do

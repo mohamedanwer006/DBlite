@@ -19,5 +19,5 @@ do
     echo " " >> .list.tmp
 done
 
-whiptail --textbox .list.tmp 20 60 --fb
+whiptail --title "List $dbName " --textbox .list.tmp 20 60 --fb
 rm .list.tmp 2>/dev/null
