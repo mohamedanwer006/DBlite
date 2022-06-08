@@ -3,6 +3,8 @@
 if [ -f /etc/redhat-release ]
 then
   sudo yum install tree -y
+  sudo yum install newt -y
+
 fi
 
 if [ -f /etc/lsb-release ]

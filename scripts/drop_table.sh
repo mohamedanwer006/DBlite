@@ -14,28 +14,22 @@ dbName="$1"
 PS3="Select the table number : " 
 # mapfile -t tables < <(ls "$DB_LITE_DIR/$dbName/")
 tables=($(ls "$DB_LITE_DIR/$dbName/")) # create array of tables names as options
-tables+=("exit") # append exit option at the end of the menu options
 
-select tbl in "${tables[@]}"
-do 
-    if [[ $REPLY =~ [^0-9] || $REPLY -gt ${#tables[@]} || $REPLY -lt 0 ]]
-    then
-        echo -e "\aEnter a number between 0 and ${#tables[@]}"
-        continue
-    fi
-
-    if [[ $tbl == exit ]] 
-    then break 
-    fi
-    
-    if [[ $REPLY -lt ${#tables[@]} ]]
-    then
-        if rm "$dbDir/$dbName/$tbl"
-        then
-            echo "The $tbl is dropped from $dbName"
-            break
-        fi
-    fi
+declare -a args=(
+    --title "Welcome to dblite DBMS " --backtitle "ITI Bash Project" --notags --fb --menu "Select option from below 👇" 20 60 "${#tables[@]}"
+)
+# create array of menu commands
+for item in "${tables[@]}"; do
+    args+=("$item" "$item")
 done
 
-PS3="Select the operation number : "
+
+if [[ $? == 1  ]]
+then
+return  #exit program
+fi
+tbl=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
+        if rm "$dbDir/$dbName/$tbl"
+        then
+            msgWidget "The $tbl is dropped from $dbName"
+fi

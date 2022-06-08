@@ -13,9 +13,11 @@ dbName=$1
 
 for i in `ls "$dbDir/$dbName"`
 do
-    echo "$i"
-    head -n 2 "$dbDir/$dbName/$i" 2>/dev/null
+    echo "$i" >> .list.tmp
+    head -n 2 "$dbDir/$dbName/$i" >> .list.tmp 2>/dev/null
     # TODO fix ERR
-    echo " "
+    echo " " >> .list.tmp
 done
 
+whiptail --textbox .list.tmp 20 60 --fb
+rm .list.tmp 2>/dev/null

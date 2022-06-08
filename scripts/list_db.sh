@@ -17,15 +17,17 @@ then
 
 for db in  `ls $dbDir`
 do
-    echo "┌─ $db"
+    echo "┌─ $db" >> .list.tmp
     for table in `ls $dbDir/$db `
     do
-         echo -e "├────\t$table" 
+         echo -e "├────\t$table"  >> .list.tmp
     done 
+    echo "└──────────────── " >> .list.tmp
 done  
 
 else
-	echo "There are no databases to list."
+	echo "There are no databases to list." >> .list.tmp
 fi
 # display using for loop 
-  
+whiptail --textbox .list.tmp 30 40 --fb --scrolltext
+rm .list.tmp 2>/dev/null 

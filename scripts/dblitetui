@@ -1,0 +1,96 @@
+#!/bin/bash
+#******************************************************************************
+#* Created at : 19/5/2022
+#******************************************************************************
+
+# Main script for DBMS
+export DB_LITE_DIR="DATABASES"
+
+function msgWidget(){
+    whiptail --msgbox  --fb "$1" 12 50
+}
+
+function dropMenu(){
+    databases=($(ls $DB_LITE_DIR/)) # create array of database names as options
+    declare -a args=(
+        --title "Welcome to dblite DBMS " --notags --fb --menu "Select database u want to delete 👇" 20 60 "${#databases[@]}"
+    )
+    # create array of menu commands
+    for item in "${databases[@]}"; do
+        args+=("$item" "$item")
+    done
+    
+    db=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
+    if [[ $? == 1  ]]
+    then
+        return
+    fi
+    if . drop_db.sh "$db" ;
+    then
+        msgWidget "The $db is deleted"
+    fi
+}
+# ///////////////////////////////////////////////
+
+declare -a mainMenuItems=("Create Database" "Connect Database" "Drop Database" "List Database" )
+
+declare -a args=(
+    --title "Welcome to dblite DBMS " --backtitle "ITI Bash Project" --notags --fb --menu "Select option from below 👇" 15 60 4
+)
+# create array of menu commands
+for item in "${mainMenuItems[@]}"; do
+    args+=("$item" "$item")
+done
+
+# Main menu loop
+
+while  true
+do
+    command=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
+    if [[ $? == 1  ]]
+    then
+        exit #exit program
+    fi
+    case $command in
+        "${mainMenuItems[0]}" )
+            # createDb
+            dbName=$(whiptail --title "Create A New Database "  --fb --inputbox "Database name" 12 50 3>&1 1>&2 2>&3 )
+            if . isvalidname.sh "$dbName"
+            then
+                . create_db.sh  "$dbName"
+                if [[ $? == 1 ]]
+                then
+                    msgWidget "Database already exists"
+                else
+                    msgWidget "$dbName has add"
+                fi
+            else
+                # echo "Invalid name of database start with letter and contain only letters ,numbers and _"
+                msgWidget "Invalid name of database start with letter and contain only letters ,numbers and _" 12 50
+            fi
+        ;;
+        
+        "${mainMenuItems[1]}" )
+            . connect_db.sh
+        ;;
+        
+        "${mainMenuItems[2]}" )
+            dropMenu
+        ;;
+        
+        "${mainMenuItems[3]}" )
+        #     . print_title.sh "List Databases"
+            . list_db.sh
+        ;;
+        
+    esac
+    
+done
+exit
+
+
+
+
+
+
+
