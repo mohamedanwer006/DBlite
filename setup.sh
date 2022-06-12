@@ -10,6 +10,7 @@ fi
 if [ -f /etc/lsb-release ]
 then
   sudo apt install tree -y
+  sudo apt install whiptail -y
 fi
 
 
