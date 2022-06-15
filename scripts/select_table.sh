@@ -37,7 +37,6 @@ function selectMainMenu(){
     then
         return 0
     fi
-    
     whereMenu $dbDir/$dbName $t
     return 0
 }
@@ -67,10 +66,10 @@ function whereMenu(){
 
 
 function columnMenu(){
-    
+    # with out where clause
     if [[ $3 -eq 0 ]];
     then
-        echo "Select certain columns or Select * (All)?"
+        # echo "Select certain columns or Select * (All)?"
         declare -a selectOptions=("Choose column(s)" "* (All)" )
         # PS3="Enter option number: "
         
@@ -86,37 +85,52 @@ function columnMenu(){
         then
             return
         fi
- 
+        
         if [[ $so == "* (All)" ]]; then
-            awk 'NR!=2' "$1/$t" > .out.temp
-            whiptail --textbox .out.temp 30 40 --fb --scrolltext
+            awk 'NR!=2' "$1/$t" > .out.tmp
+            whiptail --textbox .out.tmp 30 40 --fb --scrolltext
             rm .out.tmp 2>/dev/null
         fi
         
         if [[ $so == "Choose column(s)" ]]
         then
             IFS="," read -r -a columns < <(head -n 1 "$dbDir/$dbName/$t")
-            
+
             declare -a args=(
-                --title "Select column" --notags --fb --menu "Select certain columns or Select * (All)? 👇" 20 60 "${#columns[@]}"
+                --title "SELECT column,s FROM $t  " --notags --fb --checklist "Select columns you want : 👇" 20 60 "${#columns[@]}"
             )
             # create array of menu commands
             for item in "${columns[@]}"; do
-                args+=("$item" "$item")
+                args+=("$item" "$item" "off")
             done
-            col=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
+            selectedCols=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
             if [[  $? == 1 ]]
             then
                 return
             fi
             
- 
-            index_of  $col columns #get column index
-            var=$?
+            declare indexes=""
+            flag=0
+            for item in $selectedCols
+            do
+                # ignore first item
+                if [[ $flag == 1 ]]
+                then
+                    indexes+=","
+                fi
+                
+                item=$(echo "$item" | sed 's/^"//;s/"$//')
+                
+                index_of "$item" columns
+                var=$?
+                # echo "$var"
+                indexes+=$(("$var"+1))
+                flag=1
+            done
 
-            selectColumn $1 $t "$(($var+1))" # or $col instead of $REPLY
+            selectColumn $1 $t $indexes # or $col instead of $REPLY
             return
-    
+            
         fi
         return
     fi
@@ -124,7 +138,7 @@ function columnMenu(){
     
     # here if user will select where
     declare -a selectOptions=("Choose column(s)" "* (All)")
-    PS3="Select certain columns or Select * (All)?"
+    # PS3="Select certain columns or Select * (All)?"
     
     declare -a args=(
         --title "Select column where " --notags --fb --menu "Select certain columns or Select * (All)? 👇" 20 60 "${#selectOptions[@]}"
@@ -143,38 +157,52 @@ function columnMenu(){
     if [[ $so == "Choose column(s)" ]]
     then
         IFS="," read -r -a columns < <(head -n 1 "$1/$t")
- 
+        
+        
         declare -a args=(
-            --title "Select column where " --notags --fb --menu "Select column 👇" 20 60 "${#columns[@]}"
+            --title "SELECT column,s FROM $t  " --notags --fb --checklist "Select columns you want : 👇" 20 60 "${#columns[@]}"
         )
         # create array of menu commands
         for item in "${columns[@]}"; do
-            args+=("$item" "$item")
+            args+=("$item" "$item" "off")
         done
-        col=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
+        selectedCols=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
         if [[  $? == 1 ]]
         then
             return
         fi
         
-        PS3="Next, select the column for the where clause: "
+        declare indexes=""
+        flag=0
+        for item in $selectedCols
+        do
+            # ignore first item
+            if [[ $flag == 1 ]]
+            then
+                indexes+=","
+            fi
+            
+            item=$(echo "$item" | sed 's/^"//;s/"$//')
+            
+            index_of "$item" columns
+            var=$?
+            # echo "$var"
+            indexes+=$(("$var"+1))
+            flag=1
+        done
+        selection=$indexes
         
-        selection=$(whiptail --title "Select  "  --fb --inputbox "Enter the column numbers to appear after select executes" 12 50 3>&1 1>&2 2>&3 )
-        if [[ $? == 1  ]]
-        then
-            return
-        fi
         
-        IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
+        IFS="," read -r -a cond_columns < <(head -n 1 "$1"/"$t")
         
         declare -a args=(
-            --title "Select column where " --notags --fb --menu "cond columns 👇" 20 60 "${#cond_columns[@]}"
+            --title "Select column where " --notags --fb --menu "Select where column 👇" 20 60 "${#cond_columns[@]}"
         )
         # create array of menu commands
         for item in "${cond_columns[@]}"; do
             args+=("$item" "$item")
         done
-        col=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
+        cond_column=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
         if [[  $? == 1 ]]
         then
             return
@@ -183,10 +211,10 @@ function columnMenu(){
         typeset -i cond_column_index
         typeset -i cond_column_number
         
-        index_of $cond_column cond_columns #get column index
+        index_of "$cond_column" cond_columns #get column index
         cond_column_index=$?
         
-        criteria=$(whiptail --title "Select  " --ok-button "Datatype" --cancel-button "Finish" --fb --inputbox "Enter search criteria/value for that column" 12 50 3>&1 1>&2 2>&3 )
+        criteria=$(whiptail --title "Select where column " --fb --inputbox "Enter search criteria/value for that column" 12 50 3>&1 1>&2 2>&3 )
         if [[ $? == 1  ]]
         then
             return
@@ -206,49 +234,34 @@ function columnMenu(){
         whiptail --textbox "$1/$t.tmp" 30 40 --fb --scrolltext
         rm "$1/$t.tmp"
         return
-       
+        
     fi
     
     if [[ $so == "* (All)" ]]; then
         
-        IFS="," read -r -a columns < <(head -n 1 "$1/$t")
-
-        declare -a args=(
-            --title "Select column where " --notags --fb --menu "Select column 👇" 20 60 "${#columns[@]}"
-        )
-        # create array of menu commands
-        for item in "${columns[@]}"; do
-            args+=("$item" "$item")
-        done
-        col=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
-        if [[  $? == 1 ]]
-        then
-            return
-        fi
-
-        PS3="Next, select the column for the where clause: "
+        # PS3="Select the column for the where clause: "
         IFS="," read -r -a cond_columns < <(head -n 1 $1/$t)
         
         declare -a args=(
-            --title "Select column where " --notags --fb --menu "elect the column for the where clause: 👇" 20 60 "${#cond_columns[@]}"
+            --title "Select from $t where " --notags --fb --menu "Select the column for the where clause: 👇" 20 60 "${#cond_columns[@]}"
         )
         # create array of menu commands
         for item in "${cond_columns[@]}"; do
             args+=("$item" "$item")
         done
-        col=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
+        cond_column=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
         if [[  $? == 1 ]]
         then
             return
         fi
-
+        
         typeset -i cond_column_index
         typeset -i cond_column_number
         
-        index_of $cond_column cond_columns #get column index
+        index_of "$cond_column" cond_columns #get column index
         cond_column_index=$?
         
-        criteria=$(whiptail --title "Select  " --ok-button "Datatype" --cancel-button "Finish" --fb --inputbox "Enter search criteria/value for that column" 12 50 3>&1 1>&2 2>&3 )
+        criteria=$(whiptail --title "Select from $t where"  --fb --inputbox "Enter search criteria/value for that column" 12 50 3>&1 1>&2 2>&3 )
         if [[ $? == 1  ]]
         then
             return
@@ -269,7 +282,7 @@ function columnMenu(){
         rm "$1"/"$t".tmp
         
     fi
-
+    
 }
 
 
@@ -286,11 +299,11 @@ function selectWhere(){
     
     typeset -i cond_no=$cond_no+1
     typeset -i col_no=$col_no+1
-
-    awk -F"," -v column="$col_no" -v condition="$cond_no" -v -v fltr="$filter" '{ if ( $condition=="$fltr" ) {  print $0 } else { next } }' $1/$t > $1/buffer
-
+    
+    awk -F"," -v column="$col_no" -v condition="$cond_no" -v fltr="$filter" '{ if ( $condition=="$fltr" ) {  print $0 } else { next } }' $1/$t > "$1/buffer"
+    
     whiptail --textbox "$1/buffer" 30 40 --fb --scrolltext
-   
+    
 }
 
 selectMainMenu "$1"
