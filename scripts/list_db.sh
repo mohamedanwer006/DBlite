@@ -11,19 +11,28 @@
 #   variables
 dbDir=$DB_LITE_DIR
 # display data using tree command
-if [ -d $dbDir ]
+if [ -d "$PWD/$dbDir" ]
 then 
-	# tree "$dbDir"
+	tree "$dbDir" >> .list.tmp
 
-for db in  `ls $dbDir`
-do
-    echo "┌─ $db" >> .list.tmp
-    for table in `ls $dbDir/$db `
-    do
-         echo -e "├────\t$table"  >> .list.tmp
-    done 
-    echo "└──────────────── " >> .list.tmp
-done  
+    # substitute "directories" to "Database" in only last line of .list.tmp
+    sed -i '$s/directories/Database/g' .list.tmp
+    sed -i '$s/files/Tables/g' .list.tmp
+
+    # sed -i 's/directories/Database/g' .list.tmp
+
+    # sed -i '$d' .list.tmp
+    
+
+# for db in  `ls "$PWD/$dbDir"`
+# do
+#     echo "┌─ $db" >> .list.tmp
+#     for table in `ls $PWD/$dbDir/$db `
+#     do
+#          echo -e "├────\t$table"  >> .list.tmp
+#     done 
+#     echo "└──────────────── " >> .list.tmp
+# done  
 
 else
 	echo "There are no databases to list." >> .list.tmp
