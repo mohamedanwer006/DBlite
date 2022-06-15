@@ -5,9 +5,6 @@
 
 PS3="Enter the number of the table : "
 mapfile -t tables < <(ls "$1") # create array of table names as options
-# tables=($(ls "$1")) #create array of table names as options
-
-# tables+=("Back") #Add option to cancel update operation
 
 declare -a args=(
     --title "Insert Data  " --backtitle "ITI Bash Project" --notags --fb --menu "Select table from below 👇" 20 60 "${#tables[@]}"
@@ -18,21 +15,6 @@ for item in "${tables[@]}"; do
 done
 
 t=$(whiptail "${args[@]}" 3>&1 1>&2 2>&3 )
-
-# select t in "${tables[@]}";
-# do
-# check if user selected Back option
-# if [[ $t == "Back" ]]
-# then break
-# fi
-
-# check if user selected a valid option
-# if [[ $REPLY =~ [^0-9] || $REPLY -gt ${#tables[@]} || $REPLY -lt 0 ]]
-# then
-#     echo "Enter number from 1 to $((${#tables[@]}))"
-#     continue
-# fi
-
 
 tablePath="$1/$t"
 cancel=0
@@ -47,7 +29,6 @@ for i in "${!columns[@]}"
 do
     while true
     do
-        # read -rp "Enter value for ( ${columns[$i]} ) -> : " value
         value=$(whiptail --title "INSERT INTO $1 " --ok-button "OK"  --fb --inputbox "Enter value for ( ${columns[$i]} )" 12 50 3>&1 1>&2 2>&3 )
         if [[ $? == 1 ]]
         then 
@@ -100,4 +81,4 @@ IFS=","	;	echo "${values[*]}"	>>	"$tablePath"
 values=() # reset values array for next call as the script run as sourcing
 PS3="Select the operation number : "
 fi
-# done
+

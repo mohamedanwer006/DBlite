@@ -1,7 +1,13 @@
 {
     "svg.preview.background": "transparent",
     "cSpell.words": [
+        "cond",
         "dblite",
-        "msgbox"
+        "inputbox",
+        "msgbox",
+        "notags",
+        "nums",
+        "scrolltext",
+        "textbox"
     ]
 }

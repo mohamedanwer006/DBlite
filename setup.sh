@@ -16,7 +16,7 @@ fi
 
 for file in `ls ./scripts`
 do
-chmod +x "$PWD/scripts/$file"
+sudo  chmod +x "$PWD/scripts/$file"
 done
 export PATH=$PATH:$PWD/scripts
 
