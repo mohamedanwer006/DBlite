@@ -17,39 +17,6 @@ function msgWidget(){
 }
 
 
-# function dropMenu(){
-#     PS3="Select the table number : "
-#     # mapfile -t tables < <(ls "$DB_LITE_DIR/$dbName/")
-#     tables=($(ls "$DB_LITE_DIR/$dbName/")) # create array of tables names as options
-#     tables+=("exit") # append exit option at the end of the menu options
-#     # TODO handel number out of indexes
-#     select tbl in "${tables[@]}"
-#     do
-        
-#         if [[ $REPLY -gt ${#tables[@]} ]]
-#         then
-            
-#             echo "Error: The number $REPLY  is not correct"
-#         fi
-        
-#         if [[ $tbl == exit ]]
-#         then break
-#         fi
-        
-#         if [[ $REPLY -lt ${#tables[@]} ]]
-#         then
-#             if . drop_table.sh "$dbName" "$tbl"
-#             then
-#                 echo "The $tbl is dropped from $dbName"
-#                 break
-#             fi
-#         fi
-#     done
-    
-#     PS3="Select the operation number : "
-    
-# }
-
 function connectMenu(){
     databases=($(ls $dbDir)) # create array of database names as options
     
@@ -120,26 +87,26 @@ function commandMenu(){
             ;;
             
             "${commands[1]}" )
-                . list_tables.sh "$dbName"
+                list_tables.sh "$dbName"
             ;;
             # todo : Drop table
             "${commands[2]}" )
-                . drop_table.sh "$dbName"
+                drop_table.sh "$dbName"
             ;;
             "${commands[3]}" )
-                . insert_table.sh "$dbDir/$dbName"
+                 insert_table.sh "$dbDir/$dbName"
             ;;
             
             "${commands[4]}" )
-                . select_table.sh "$dbDir" "$dbName"
+                select_table.sh "$dbDir" "$dbName"
             ;;
             
             "${commands[5]}" )
-                . delete_table.sh "$dbDir/$dbName"
+                 delete_table.sh "$dbDir/$dbName"
             ;;
             
             "${commands[6]}" )
-                . update_table.sh "$dbDir/$dbName"
+                 update_table.sh "$dbDir/$dbName"
             ;;
         esac
     done

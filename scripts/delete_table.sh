@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function msgWidget(){
+    whiptail --msgbox  --fb "$1" 12 50
+}
+
 
 function index_of(){
     my_array=$2[@]

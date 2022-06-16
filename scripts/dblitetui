@@ -52,16 +52,16 @@ do
         ;;
         
         "${mainMenuItems[1]}" )
-            . connect_db.sh
+            connect_db.sh
         ;;
         
         "${mainMenuItems[2]}" )
-            . drop_db.sh
+             drop_db.sh
         ;;
         
         "${mainMenuItems[3]}" )
         #     . print_title.sh "List Databases"
-            . list_db.sh
+             list_db.sh
         ;;
         
     esac

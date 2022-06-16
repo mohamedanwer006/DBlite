@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# firstArg="$PWD/DATABASES/mo/"
-# set -- "$firstArg"
+function msgWidget(){
+    whiptail --msgbox  --fb "$1" 12 50
+}
 
-PS3="Enter the number of the table : "
 mapfile -t tables < <(ls "$1") # create array of table names as options
 
 declare -a args=(
-    --title "Insert Data  " --backtitle "ITI Bash Project" --notags --fb --menu "Select table from below 👇" 20 60 "${#tables[@]}"
+    --title "Insert into  "  --notags --fb --menu "Select table from below 👇" 20 60 "${#tables[@]}"
 )
 # create array of menu commands
 for item in "${tables[@]}"; do
@@ -29,7 +29,7 @@ for i in "${!columns[@]}"
 do
     while true
     do
-        value=$(whiptail --title "INSERT INTO $1 " --ok-button "OK"  --fb --inputbox "Enter value for ( ${columns[$i]} )" 12 50 3>&1 1>&2 2>&3 )
+        value=$(whiptail --title "INSERT INTO " --ok-button "OK"  --fb --inputbox "Enter value for ( ${columns[$i]} )" 12 50 3>&1 1>&2 2>&3 )
         if [[ $? == 1 ]]
         then 
         cancel=1
@@ -81,4 +81,4 @@ IFS=","	;	echo "${values[*]}"	>>	"$tablePath"
 values=() # reset values array for next call as the script run as sourcing
 PS3="Select the operation number : "
 fi
-
+return 0
